@@ -1,0 +1,75 @@
+<div>
+<h5 class="text-white  ">{{this.formValue}}</h5>
+
+</div>
+
+<div class="content d-flex">
+<form  [formGroup]="registrationForm" style="display: flex;">
+<!-- aditioal -->
+  <div *ngIf="this.isOpenAdditionalPanel" class="register-form-aditional">
+
+    <label class="register-label" >Additioanl fileds</label>
+
+    <div formArrayName="phoneNumbers">
+      <div *ngFor="let phone of this.getPhoneNumbersArray.controls;let i=index">
+
+
+        <span class="pn-span d-flex">
+          <input class="register-input-without-wh w-90 left-rad" [formControlName]="i" type="number" placeholder="Phone number {{i+1}}"/>
+          <input type="button" class="w-10 register-input-without-wh right-rad" (click)=RemoveAlternatePhone(i) value="X"/>
+        </span>
+        <hr>
+        <span *ngIf="this.getPhoneNumbersArray.controls[i].invalid">Incorrect phone</span>
+      </div>
+    </div>
+    
+    <button *ngIf="this.getPhoneNumbersArray.length<3" class="register-btn register-input mtb-20" (click)="AddAlternatePhone()">add phone</button>
+    
+      <div formArrayName="languages" *ngFor="let phone of this.languagesArray.controls;let j=index">
+  
+        <span class="pn-span d-flex">
+          <select [formControlName]="j" class="register-input-without-wh w-90 left-rad">
+              <option> Not selected language</option>      
+              <option *ngFor="let x of this.getUnusbleLanguages(j);">{{x}}</option>      
+          </select>    
+          <input type="button" class="w-10 register-input-without-wh right-rad" (click)=RemoveAlternateLanguage(j) value="X"/>
+      </span>
+      <hr>
+  
+      </div>
+    
+    <button *ngIf="this.languagesArray.length<3" class="register-btn register-input" (click)="AddAlternateLanguage()">add Language</button>
+    
+  </div>
+
+<!-- main -->
+  <div class="register-form">
+  
+    <label class="register-label" >Registration</label>
+
+    <input class="register-input"  formControlName="login" name="login" type="text" placeholder="Login"/>
+
+    <span *ngIf="(registerFormControls['login'].touched && registerFormControls['login'].invalid)||(this.isSubmitted&& registerFormControls['login'].invalid)">Incorrect login</span>
+
+    <input class="register-input" formControlName="email" type="email" placeholder="Email"/>
+
+    <span *ngIf="(registerFormControls['email'].touched && registerFormControls['email'].invalid)||(this.isSubmitted&& registerFormControls['email'].invalid)">Incorrect email</span>
+
+    <span class="pn-span d-flex">
+      <input class="register-input-without-wh w-80 left-rad" formControlName="password" [type]="changetype?'password':'text'" placeholder="Password"/>
+      <input type="button" class="w-20 register-input-without-wh right-rad" (click)=viewPass() [value]="isPasswordVisable?'show':'hide'"/>
+    </span>
+
+    <input class="register-input" formControlName="confirmPass" type="password" placeholder="Confirme password"/>
+
+    <span *ngIf="(registerFormControls['confirmPass'].touched && registerFormControls['confirmPass'].invalid)||(this.isSubmitted&& registerFormControls['confirmPass'].invalid)||(registerFormControls['password'].touched && registerFormControls['password'].invalid)||(this.isSubmitted&& registerFormControls['password'].invalid)">Incorrect Password or confirm password</span>
+
+    <button *ngIf="!this.isOpenAdditionalPanel" class="register-btn register-input" (click)="changePanelStatus()">show additional fields</button>
+    <button *ngIf="this.isOpenAdditionalPanel" class="register-btn register-input" (click)="changePanelStatus()">hide additional fields</button>
+      
+    <input class="register-btn register-input btn-submit" (click)="Submit()" type="submit" value="Register"/>
+
+  </div>
+
+</form>
+</div>
